@@ -1,6 +1,17 @@
 # Bar Card
 
-This is a fork from [custom-cards/bar-card](https://github.com/custom-cards/bar-card) because it was not maintained.
+This is a fork from [custom-cards/bar-card](https://github.com/custom-cards/bar-card) because it was not maintained. It is based on the maintained [spacerokk/bar-card](https://github.com/spacerokk/bar-card) fork and additionally modernizes the Lovelace visual editor (see below).
+
+---
+
+## Modernized visual editor (this fork)
+This fork rewrites the Lovelace **visual (GUI) editor**, which had stopped working on current Home Assistant.
+**Problem:** the original editor was built from Polymer `paper-*` elements (`paper-input`, `paper-dropdown-menu`, `paper-listbox`, `paper-item`). Home Assistant removed those elements, so the GUI editor rendered blank/unusable. The card rendering itself was unaffected.
+**Fix:** `src/editor.ts` was rewritten to use Home Assistant's schema-driven [`ha-form`](https://www.home-assistant.io/docs/blueprint/selectors/) selectors, plus small repeatable list editors for the `entities` and `severity` arrays (add / remove / reorder, with per-entity option overrides). Card rendering and the YAML config schema are unchanged, and advanced keys such as `style`, `card_mod`, and `*_action` are preserved when saving.
+### Verification (2026-06-11)
+Tested against a live Home Assistant instance:
+- The JavaScript bundle Home Assistant serves matches the built `dist/bar-card.js` (verified by SHA-256) and contains **no** `paper-*` elements.
+- Loaded with a real `hass` object, `bar-card-editor` instantiates with no errors and renders native Home Assistant controls — `ha-entity-picker`, `ha-selector` (text / number / select / boolean / icon), `ha-select` dropdowns, `ha-switch` toggles, and `ha-icon-picker` — organized into `ha-expansion-panel` sections (Bar appearance, Positions, Animation, Severity), with working add/remove/reorder for entities and severity thresholds.
 
 ---
 
